@@ -14,12 +14,26 @@ export default new VueRouter({
     mode: 'history',
     routes: [
         {
-            path: '', component: landing
+            path: '', component: landing,
+            beforeEnter: (to, from, next) => {
+                if (localStorage.getItem('user') == null) {
+                    next();
+                } else {
+                    next('/dashboard')
+                }
+            },
         },
         {
             path: '/login',
             name: 'login_route',
             component: login,
+            beforeEnter: (to, from, next) => {
+                if (localStorage.getItem('user') == null) {
+                    next();
+                } else {
+                    next('/dashboard')
+                }
+            },
         },
         {
             path: '/dashboard',

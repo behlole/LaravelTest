@@ -2872,11 +2872,25 @@ vue__WEBPACK_IMPORTED_MODULE_7__["default"].use(vue_router__WEBPACK_IMPORTED_MOD
   mode: 'history',
   routes: [{
     path: '',
-    component: _vue_landing__WEBPACK_IMPORTED_MODULE_2__["default"]
+    component: _vue_landing__WEBPACK_IMPORTED_MODULE_2__["default"],
+    beforeEnter: function beforeEnter(to, from, next) {
+      if (localStorage.getItem('user') == null) {
+        next();
+      } else {
+        next('/dashboard');
+      }
+    }
   }, {
     path: '/login',
     name: 'login_route',
-    component: _vue_login__WEBPACK_IMPORTED_MODULE_0__["default"]
+    component: _vue_login__WEBPACK_IMPORTED_MODULE_0__["default"],
+    beforeEnter: function beforeEnter(to, from, next) {
+      if (localStorage.getItem('user') == null) {
+        next();
+      } else {
+        next('/dashboard');
+      }
+    }
   }, {
     path: '/dashboard',
     component: _vue_dashboard__WEBPACK_IMPORTED_MODULE_1__["default"],

@@ -34,6 +34,7 @@ export default {
         logout() {
             localStorage.clear();
             this.is_logged_in = false;
+            this.$toaster.success("Logged Out successfully");
             router.push('/login');
         }
     },

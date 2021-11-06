@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CompanyRequest;
 use App\Models\Company;
+use Illuminate\Support\Facades\Mail;
 
 class CompanyController extends Controller
 {
@@ -119,6 +120,8 @@ class CompanyController extends Controller
             $message = 'Updated Successfully';
         } else {
             $company->save();
+            Mail::to($company->email)
+                ->queue(new \App\Mail\Company($company));
             $message = 'Created Successfully';
 
         }

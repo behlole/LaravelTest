@@ -61,6 +61,7 @@ export default {
         deleteEmployee(id) {
             axios.delete('/api/employee/' + id).then((result) => {
                 this.employees = result.data.employees
+                this.$toaster.success(result.data.message);
             })
         },
         editEmployee(id) {

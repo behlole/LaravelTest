@@ -41,7 +41,8 @@ export default {
     },
     methods: {
         createCompany() {
-            if (this.company.name == '') {
+            if (this.company.name == '' || this.company.email == '') {
+                this.$toaster.error("Please enter valid name and email");
                 return;
             } else {
                 let data = this.createFormData();
@@ -49,16 +50,19 @@ export default {
                     .then(response => {
                         if (response.status = 201) {
                             this.company.name = '';
+                            this.$toaster.success(response.data.message);
                             router.push('/dashboard/company');
                         }
                     })
                     .catch(error => {
-                        console.log(error)
+                        this.$toaster.error(error.data.message);
+
                     })
             }
         },
         editCompany() {
             if (this.company.name == '') {
+                this.$toaster.error("Please enter valid name");
                 return;
             } else {
                 let data = this.createFormData();
@@ -66,11 +70,13 @@ export default {
                     .then(response => {
                         if (response.status = 201) {
                             this.company.name = '';
+                            this.$toaster.success(response.data.message);
                             router.push('/dashboard/company');
                         }
                     })
                     .catch(error => {
-                        console.log(error)
+                        this.$toaster.error(error);
+
                     })
             }
         },

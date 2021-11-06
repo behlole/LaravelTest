@@ -39,6 +39,7 @@ export default {
             event.preventDefault();
             axios.post('/api/login', this.user).then((result) => {
                 if (result.data.access_token) {
+                    this.$toaster.success("Logged in Successfully");
                     localStorage.setItem('user', JSON.stringify(result.data.user));
                     localStorage.setItem('token', result.data.access_token);
                     router.push('/dashboard');
@@ -46,6 +47,7 @@ export default {
             })
                 .catch((error) => {
                     console.log(error)
+                    this.$toaster.error(error);
                 })
         }
     }

@@ -2108,17 +2108,21 @@ __webpack_require__.r(__webpack_exports__);
     createCompany: function createCompany() {
       var _this = this;
 
-      if (this.company.name == '') {
+      if (this.company.name == '' || this.company.email == '') {
+        this.$toaster.error("Please enter valid name and email");
         return;
       } else {
         var data = this.createFormData();
         axios.post('/api/company', data.form_data, data.config).then(function (response) {
           if (response.status = 201) {
             _this.company.name = '';
+
+            _this.$toaster.success(response.data.message);
+
             _router__WEBPACK_IMPORTED_MODULE_0__["default"].push('/dashboard/company');
           }
         })["catch"](function (error) {
-          console.log(error);
+          _this.$toaster.error(error.data.message);
         });
       }
     },
@@ -2126,16 +2130,20 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       if (this.company.name == '') {
+        this.$toaster.error("Please enter valid name");
         return;
       } else {
         var data = this.createFormData();
         axios.post('/api/company/update/' + this.$route.params.id, data.form_data, data.config).then(function (response) {
           if (response.status = 201) {
             _this2.company.name = '';
+
+            _this2.$toaster.success(response.data.message);
+
             _router__WEBPACK_IMPORTED_MODULE_0__["default"].push('/dashboard/company');
           }
         })["catch"](function (error) {
-          console.log(error);
+          _this2.$toaster.error(error);
         });
       }
     },
@@ -2407,6 +2415,8 @@ __webpack_require__.r(__webpack_exports__);
 
       axios["delete"]('/api/company/' + id).then(function (result) {
         _this2.companies = result.data.companies;
+
+        _this2.$toaster.success(result.data.message);
       });
     },
     editCompany: function editCompany(id) {
@@ -2547,6 +2557,8 @@ __webpack_require__.r(__webpack_exports__);
 
       axios["delete"]('/api/employee/' + id).then(function (result) {
         _this2.employees = result.data.employees;
+
+        _this2.$toaster.success(result.data.message);
       });
     },
     editEmployee: function editEmployee(id) {
@@ -2656,6 +2668,7 @@ __webpack_require__.r(__webpack_exports__);
     logout: function logout() {
       localStorage.clear();
       this.is_logged_in = false;
+      this.$toaster.success("Logged Out successfully");
       _router__WEBPACK_IMPORTED_MODULE_0__["default"].push('/login');
     }
   },
@@ -2754,15 +2767,21 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     loginUser: function loginUser(event) {
+      var _this = this;
+
       event.preventDefault();
       axios.post('/api/login', this.user).then(function (result) {
         if (result.data.access_token) {
+          _this.$toaster.success("Logged in Successfully");
+
           localStorage.setItem('user', JSON.stringify(result.data.user));
           localStorage.setItem('token', result.data.access_token);
           _router__WEBPACK_IMPORTED_MODULE_1__["default"].push('/dashboard');
         }
       })["catch"](function (error) {
         console.log(error);
+
+        _this.$toaster.error(error);
       });
     }
   }
@@ -2787,7 +2806,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
- // You need a specific loader for CSS files like https://github.com/webpack/css-loader
 
 
 vue__WEBPACK_IMPORTED_MODULE_4__["default"].component('pagination', __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js"));

@@ -16,7 +16,7 @@ class EmployeeController extends Controller
     public function index()
     {
         return response()->json(['employees' =>
-            Employee::join('companies', 'employees.company_id', '=', 'companies.id')->select(['employees.*', 'companies.name', 'companies.id as company_id'])->paginate()]);
+            Employee::join('companies', 'employees.company_id', '=', 'companies.id')->select(['employees.*', 'companies.name', 'companies.id as company_id'])->paginate(10)]);
     }
 
     /**
@@ -40,7 +40,7 @@ class EmployeeController extends Controller
         $employee = new Employee();
         $employee->fill($request->all());
         $employee->save();
-        return response()->json(['employees' => Employee::paginate()]);
+        return response()->json(['employees' => Employee::paginate(10)]);
     }
 
     /**
@@ -100,7 +100,7 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
         if ($employee) {
             $employee->delete();
-            return $this->index();
+            return response()->json(['message' => 'Record Not Fuund']);;
         } else {
             return response()->json(['message' => 'Record Not Fuund']);
 

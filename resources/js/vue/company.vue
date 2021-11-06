@@ -58,6 +58,8 @@ export default {
         deleteCompany(id) {
             axios.delete('/api/company/' + id).then((result) => {
                 this.companies = result.data.companies
+                this.$toaster.success(result.data.message);
+
             })
         },
         editCompany(id) {

@@ -14,7 +14,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        return response()->json(['companies' => Company::paginate()]);
+        return response()->json(['companies' => Company::paginate(5)]);
     }
 
     /**
@@ -47,7 +47,12 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        //
+        $company = Company::find($id);
+        if ($company) {
+            return response()->json(['company' => $company]);
+        } else {
+            return response()->json(['message' => 'Not Found']);
+        }
     }
 
     /**
@@ -86,7 +91,7 @@ class CompanyController extends Controller
         $company = Company::find($id);
         if ($company) {
             $company->delete();
-            return response()->json(['message' => 'Record Deleted Successfully', 'companies' => Company::paginate()]);
+            return response()->json(['message' => 'Record Deleted Successfully', 'companies' => Company::paginate(10)]);
         } else {
             return response()->json(['message' => 'Record not found']);
         }
@@ -98,7 +103,9 @@ class CompanyController extends Controller
         $company->fill($request->all());
         if ($request->hasFile('logo_url')) {
             try {
-                if ($is_update_function && $company->logo_url != null) unlink($company->logo_url);
+                if ($is_update_function && $company->logo_url != null) {
+                    unlink($company->logo_url);
+                }
                 $path = $request->file('logo_url')->store(
                     'logo_avatars', 'public'
                 );
@@ -118,8 +125,13 @@ class CompanyController extends Controller
         return response()->json(
             [
                 'message' => $message,
-                'companies' => Company::paginate()
+                'companies' => Company::paginate(10)
             ]);
-        return response()->json(['companies' => Company::paginate()]);
+        return response()->json(['companies' => Company::paginate(10)]);
+    }
+
+    public function getCompanyListForEmployee()
+    {
+        return Company::all();
     }
 }

@@ -17,7 +17,7 @@ class CompanyRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'unique:companies,email',
+            'email' => 'email',
             'logo_url' => 'dimensions:max_width=100,max_height=100'
         ];
     }
@@ -26,7 +26,6 @@ class CompanyRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([
             'errors' => $validator->errors(),
-            'request'=>request()->json(),
             'status' => true
         ], 422));
     }

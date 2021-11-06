@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::post('register', [\App\Http\Controllers\AuthController::class, 'register']);
 Route::apiResource('employee', '\App\Http\Controllers\EmployeeController');
-Route::apiResource('company', '\App\Http\Controllers\CompanyController');
+Route::apiResource('company', '\App\Http\Controllers\CompanyController')->except('update');
+
+
+Route::post('company/update/{id}', [\App\Http\Controllers\CompanyController::class, 'update']);
+Route::get('company-for-employee', [\App\Http\Controllers\CompanyController::class, 'getCompanyListForEmployee']);

@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CompanyRequest;
-use App\Models\Company;
+use App\Http\Requests\EmployeeRequest;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
@@ -16,7 +15,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        return response()->json(['employees' => Employee::paginate()]);
+        return response()->json(['employees' =>
+            Employee::join('companies', 'employees.company_id', '=', 'companies.id')->select(['employees.*', 'companies.name', 'companies.id as company_id'])->paginate()]);
     }
 
     /**
@@ -35,23 +35,11 @@ class EmployeeController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CompanyRequest $request)
+    public function store(EmployeeRequest $request)
     {
-        $company = new Company();
-        $company->name = $request->input('name');
-        $company->email = $request->input('email');
-        $company->website_url = $request->input('website_url');
-        if ($request->hasFile('logo_url')) {
-            try {
-                $path = $request->file('logo_url')->store(
-                    'logo_avatars', 'public'
-                );
-                $company->logo_url = $path;
-            } catch (\Exception $exception) {
-                return response()->json(['message' => $exception->getMessage()]);
-            }
-        }
-        $company->save();
+        $employee = new Employee();
+        $employee->fill($request->all());
+        $employee->save();
         return response()->json(['employees' => Employee::paginate()]);
     }
 
@@ -63,7 +51,12 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
+        $employee = Employee::find($id);
+        if ($employee) {
+            return response()->json(['employee' => $employee]);
+        } else {
+            return response()->json(['message' => 'Not Found']);
+        }
     }
 
     /**
@@ -86,7 +79,14 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $employee = Employee::find($id);
+        if ($employee) {
+            $employee->fill($request->all());
+            $employee->update();
+            return response()->json(['companies' => Employee::paginate(10)]);
+
+        }
+        return response()->json(['message' => 'Record not found']);
     }
 
     /**
@@ -97,6 +97,13 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $employee = Employee::find($id);
+        if ($employee) {
+            $employee->delete();
+            return $this->index();
+        } else {
+            return response()->json(['message' => 'Record Not Fuund']);
+
+        }
     }
 }
